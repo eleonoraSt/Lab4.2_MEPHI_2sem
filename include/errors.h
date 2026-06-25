@@ -1,0 +1,16 @@
+#ifndef ERRORS_H
+#define ERRORS_H
+
+enum ErrorCode {
+    OK = 0,
+    INDEX_ERROR,
+    NEGATIVE_SIZE,
+    STREAM_NOT_OPEN,
+    STREAM_NOT_CLOSED,
+    END_OF_STREAM,
+    READING_ERROR,
+    WRITING_ERROR,
+    SEEK_NOT_SUPPORTED,
+};
+
+#endif  // ERRORS_H
