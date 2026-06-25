@@ -24,7 +24,7 @@ public:
         seq = new LinkedList<T>(*other.seq);
     }
 
-    ~ListSequence() {
+    ~ListSequence() override {
         delete seq;
     }
 

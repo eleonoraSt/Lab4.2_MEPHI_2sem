@@ -17,29 +17,29 @@ public:
         opened = true;
     }
 
-    ~SequenceReadOnlyStream() {
+    ~SequenceReadOnlyStream() override {
         Close();
     }
 
-    bool IsEndOfStream() {
+    bool IsEndOfStream() override {
         return pos >= static_cast<size_t>(seq->GetLength());
     }
 
-    T Read() {
+    T Read() override {
         if (!opened) throw STREAM_NOT_OPEN;
         if (IsEndOfStream()) throw END_OF_STREAM;
         return seq->Get(pos++);
     }
 
-    size_t GetPosition() const {
+    size_t GetPosition() const override {
         return pos;
     }
 
-    bool IsCanSeek() const {
+    bool IsCanSeek() const override {
         return true;
     }
 
-    size_t Seek(size_t index) {
+    size_t Seek(size_t index) override {
         if (!opened) throw STREAM_NOT_OPEN;
         size_t length = static_cast<size_t>(seq->GetLength());
         if (index > length) index = length;
@@ -47,16 +47,16 @@ public:
         return pos;
     }
 
-    bool IsCanGoBack() const {
+    bool IsCanGoBack() const override {
         return true;
     }
 
-    void Open() {
+    void Open() override {
         opened = true;
         pos = 0;
     }
 
-    void Close() {
+    void Close() override {
         opened = false;
     }
 };

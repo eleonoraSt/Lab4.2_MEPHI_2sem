@@ -8,6 +8,7 @@
 template <class T> class BinaryHeap {
 private:
     DynamicArray<T>* heap;
+    size_t size;  // heap->GetLength() - это capacity
     size_t unsorted;
 
     void siftDown(size_t index, bool goDeep) {
@@ -39,15 +40,35 @@ public:
     BinaryHeap(DynamicArray<T>* array) {
         heap = array;
         unsorted = array->GetSize();
+        size = unsorted;
     }
 
     BinaryHeap() {
-        heap = new DynamicArray<T>(0);
+        heap = new DynamicArray<T>(1);
         unsorted = 0;
+        size = 1;
     }
 
     ~BinaryHeap() {
         delete heap;
+    }
+
+    T Get(size_t index) {
+        if (index >= size || index < 0) throw INDEX_ERROR;
+        return heap->Get(index);
+    }
+
+    size_t GetSize() {
+        return size;
+    }
+
+    void Append(T item) {
+        if (size == heap->GetSize()) {
+            heap->Resize(size * 2 + 1);
+        }
+        heap->Set(size, item);
+        size++;
+        unsorted = size;
     }
 
     void pyramidSort() {

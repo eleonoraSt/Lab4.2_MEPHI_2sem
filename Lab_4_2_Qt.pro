@@ -22,6 +22,7 @@ HEADERS += \
     include/WriteOnlyStream.h \
     include/errors.h \
     include/serializing.h \
+    include/sorting.h \
     tests/testAll.h \
     tests/testSequence.h
 
@@ -30,4 +31,5 @@ SOURCES += \
     src/main.cpp \
     src/serializing.cpp \
     tests/testAll.cpp \
-    tests/testSequence.cpp
+    tests/testSequence.cpp \
+    tests/testSort.cpp

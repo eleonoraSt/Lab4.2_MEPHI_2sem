@@ -5,12 +5,17 @@
 #include <QTextEdit>
 #include <QPushButton>
 #include <QLabel>
+#include <QCheckBox>
 
 class Window: public QWidget {
     Q_OBJECT
 public:
     Window(QWidget *parent = nullptr);
+private slots:
+    void fileButtonClicked();
 private:
+    QCheckBox* allowDoubles;
+
     QLabel* inputFilenameHint;
     QTextEdit* inputFilenameField;
     QLabel* outputFilenameHint;

@@ -24,7 +24,7 @@ public:
         seq = new DynamicArray<T>(*other.seq);
     }
 
-    ~ArraySequence() {
+    ~ArraySequence() override {
         delete seq;
     }
 

@@ -8,12 +8,15 @@ int str2intDeserializer(const std::string &str) {
         val = stoi(str);
     } catch (std::out_of_range error) {
         val = 0;
+    } catch (std::invalid_argument error) {
+        val = 0;
     }
+
     return val;
 }
 
 std::string int2strSerializer(const int &val) {
-    return std::to_string(val);
+    return std::to_string(val) + " ";
 }
 
 double str2doubleDeserializer(const std::string &str) {
@@ -22,10 +25,12 @@ double str2doubleDeserializer(const std::string &str) {
         val = stod(str);
     } catch (std::out_of_range error) {
         val = 0;
+    } catch (std::invalid_argument error) {
+        val = 0;
     }
     return val;
 }
 
 std::string double2strSerializer(const double &val) {
-    return std::to_string(val);
+    return std::to_string(val) + " ";
 }

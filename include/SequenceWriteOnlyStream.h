@@ -18,29 +18,29 @@ public:
         opened = true;
     }
 
-    ~SequenceWriteOnlyStream() {
+    ~SequenceWriteOnlyStream() override {
         Close();
     }
 
-    size_t GetPosition() const {
+    size_t GetPosition() const override {
         return pos;
     }
 
-    size_t Write(T item) {
+    size_t Write(T item) override {
         if (!opened) throw STREAM_NOT_OPEN;
         seq->Append(item);
         pos++;
         return pos;
     }
 
-    void Open() {
+    void Open() override {
         if (opened) throw STREAM_NOT_CLOSED;
         seq = new ListSequence<T>();
         pos = 0;
         opened = true;
     }
 
-    void Close() {
+    void Close() override {
         delete seq;
         opened = false;
     }

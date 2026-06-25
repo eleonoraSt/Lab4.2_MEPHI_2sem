@@ -4,6 +4,7 @@
 #include <cstdlib>  // size_t
 
 template <class T> class WriteOnlyStream {
+public:
     virtual ~WriteOnlyStream() {}
 
     virtual size_t GetPosition() const = 0;

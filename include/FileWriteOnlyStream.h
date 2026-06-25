@@ -23,15 +23,15 @@ public:
         opened = false;
     }
 
-    ~FileWriteOnlyStream() {
+    ~FileWriteOnlyStream() override {
         Close();
     }
 
-    size_t GetPosition() const {
+    size_t GetPosition() const override {
         return pos;
     }
 
-    size_t Write(T item) {
+    size_t Write(T item) override {
         if (!opened) throw STREAM_NOT_OPEN;
         std::string token = serializer(item);
         file << token;
@@ -40,7 +40,7 @@ public:
         return pos;
     }
 
-    void Open() {
+    void Open() override {
         if (opened) throw STREAM_NOT_CLOSED;
         file.open(filename);
         if (!file.is_open()) throw STREAM_NOT_OPEN;
@@ -48,7 +48,7 @@ public:
         pos = 0;
     }
 
-    void Close() {
+    void Close() override {
         if (file.is_open()) file.close();
         opened = false;
     }

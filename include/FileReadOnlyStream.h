@@ -25,11 +25,11 @@ public:
         eofReached = false;
     }
 
-    ~FileReadOnlyStream() {
+    ~FileReadOnlyStream() override {
         Close();
     }
 
-    bool IsEndOfStream() {
+    bool IsEndOfStream() override {
         if (!opened) return true;
         if (file.eof()) {
             eofReached = true;
@@ -37,7 +37,7 @@ public:
         return eofReached;
     }
 
-    T Read() {
+    T Read() override {
         if (!opened) throw STREAM_NOT_OPEN;
         if (IsEndOfStream()) throw END_OF_STREAM;
         std::string token;
@@ -52,23 +52,23 @@ public:
         return item;
     }
 
-    size_t GetPosition() const {
+    size_t GetPosition() const override {
         return pos;
     }
 
-    bool IsCanSeek() const {
+    bool IsCanSeek() const override {
         return false;
     }
 
-    size_t Seek(size_t index) {
+    size_t Seek(size_t index) override {
         throw SEEK_NOT_SUPPORTED;
     }
 
-    bool IsCanGoBack() const {
+    bool IsCanGoBack() const override{
         return false;
     }
 
-    void Open() {
+    void Open() override {
         if (opened) throw STREAM_NOT_CLOSED;
         file.open(filename);
         if (!file.is_open()) throw STREAM_NOT_OPEN;
@@ -77,7 +77,7 @@ public:
         eofReached = false;
     }
 
-    void Close() {
+    void Close() override {
         if (file.is_open()) file.close();
         opened = false;
     }
