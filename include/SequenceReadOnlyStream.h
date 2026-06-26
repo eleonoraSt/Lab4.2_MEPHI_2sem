@@ -3,6 +3,7 @@
 
 #include "ReadOnlyStream.h"
 #include "Sequence.h"
+#include "ArraySequence.h"
 #include "errors.h"
 
 template <class T> class SequenceReadOnlyStream: public ReadOnlyStream<T> {
@@ -13,6 +14,18 @@ private:
 public:
     SequenceReadOnlyStream(Sequence<T>* sequence) {
         seq = sequence;
+        pos = 0;
+        opened = true;
+    }
+
+    SequenceReadOnlyStream() {
+        seq = new ArraySequence<T>();
+        pos = 0;
+        opened = true;
+    }
+
+    SequenceReadOnlyStream(const SequenceReadOnlyStream<T> &other) {
+        *seq = *other.seq;
         pos = 0;
         opened = true;
     }

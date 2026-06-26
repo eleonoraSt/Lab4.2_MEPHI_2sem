@@ -18,6 +18,18 @@ public:
         opened = true;
     }
 
+    SequenceWriteOnlyStream() {
+        seq = new ListSequence<T>();
+        pos = 0;
+        opened = true;
+    }
+
+    SequenceWriteOnlyStream(const SequenceWriteOnlyStream<T> &other) {
+        *seq = *other.seq;
+        pos = 0;
+        opened = true;
+    }
+
     ~SequenceWriteOnlyStream() override {
         Close();
     }

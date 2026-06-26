@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QString>
 
 #include "..\include\Window.h"
 #include "..\include\serializing.h"
@@ -10,11 +11,11 @@ Window::Window(QWidget *parent) {
     allowDoubles = new QCheckBox("Разрешить действительные числа", this);
     allowDoubles->setGeometry(10, 10, 500, 30);
 
-    inputFilenameHint = new QLabel("Введите имя файла ввода:", this);
+    inputFilenameHint = new QLabel("Введите адрес файла ввода:", this);
     inputFilenameHint->setGeometry(10, 50, 500, 30);
     inputFilenameField = new QTextEdit(this);
     inputFilenameField->setGeometry(10, 90, 500, 30);
-    outputFilenameHint = new QLabel("Введите имя файла вывода:", this);
+    outputFilenameHint = new QLabel("Введите адрес файла вывода:", this);
     outputFilenameHint->setGeometry(10, 130, 500, 30);
     outputFilenameField = new QTextEdit(this);
     outputFilenameField->setGeometry(10, 170, 500, 30);
@@ -39,6 +40,7 @@ Window::Window(QWidget *parent) {
     setWindowTitle("Лабораторная 4");
 
     connect(streamFilenameButton, SIGNAL (clicked()), this, SLOT (fileButtonClicked()));
+    connect(streamButton, SIGNAL (clicked()), this, SLOT (sequenceButtonClicked()));
 }
 
 void Window::fileButtonClicked() {
@@ -61,4 +63,19 @@ void Window::fileButtonClicked() {
             resultMessage->setText("Ошибка записи в файл");
         }
     }
+}
+
+void Window::sequenceButtonClicked() {
+    std::string output;
+    if (allowDoubles->isChecked()) {
+        SequenceReadOnlyStream<double>* inputStream = ReadInputField<double>();
+        output = sortSeqStream<double>(inputStream);
+        delete inputStream;
+    } else {
+        SequenceReadOnlyStream<int>* inputStream = ReadInputField<int>();
+        output = sortSeqStream<int>(inputStream);
+        delete inputStream;
+    }
+    outputField->setText(QString::fromStdString(output));
+    resultMessage->setText("Сортировка выполнена успешно");
 }

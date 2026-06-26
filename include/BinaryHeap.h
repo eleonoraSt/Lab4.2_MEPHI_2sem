@@ -21,7 +21,7 @@ private:
             maxChild = child1;
         }
         size_t newIndex = index;
-        if (heap->Get(index) > heap->Get(maxChild)) {
+        if (heap->Get(index) < heap->Get(maxChild)) {
             T buf = heap->Get(index);
             heap->Set(index, heap->Get(maxChild));
             heap->Set(maxChild, buf);
@@ -31,12 +31,6 @@ private:
         if (newIndex != index && goDeep) siftDown(newIndex, goDeep);
     }
 public:
-    /*
-    BinaryHeap(T* data, size_t size) {
-        heap = new DynamicArray<T>(data, size);
-        unsorted = size;
-    }
-*/
     BinaryHeap(DynamicArray<T>* array) {
         heap = array;
         unsorted = array->GetSize();
@@ -44,9 +38,9 @@ public:
     }
 
     BinaryHeap() {
-        heap = new DynamicArray<T>(1);
+        heap = new DynamicArray<T>(0);
         unsorted = 0;
-        size = 1;
+        size = 0;
     }
 
     ~BinaryHeap() {
