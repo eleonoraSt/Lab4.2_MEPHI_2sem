@@ -5,6 +5,8 @@
 #include "..\include\serializing.h"
 #include "..\include\sorting.h"
 
+#include <iostream>  // для отладки
+
 Window::Window(QWidget *parent) {
     setFixedSize(650, 650);
 
@@ -48,6 +50,7 @@ void Window::fileButtonClicked() {
     std::string outputFilename = outputFilenameField->toPlainText().toStdString();
     try {
         if (allowDoubles->isChecked()) {
+            std::cout << "about to call the func\n";
             sortFileStream<double>(inputFilename, outputFilename, str2doubleDeserializer, \
                                    double2strSerializer);
         } else {
@@ -61,6 +64,9 @@ void Window::fileButtonClicked() {
             resultMessage->setText("Ошибка чтения файла");
         } else if (error == WRITING_ERROR) {
             resultMessage->setText("Ошибка записи в файл");
+        } else {
+            resultMessage->setText("Ошибка");
+            std::cout << "error: " << (int)error << "\n";
         }
     }
 }

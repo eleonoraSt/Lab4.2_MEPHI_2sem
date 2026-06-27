@@ -1,3 +1,5 @@
 todo
 /build/
 /.qtcreator/
+testInput.txt
+testOutput.txt

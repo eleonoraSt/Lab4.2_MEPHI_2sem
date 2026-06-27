@@ -11,7 +11,7 @@ private:
     size_t size;  // heap->GetLength() - это capacity
     size_t unsorted;
 
-    void siftDown(size_t index, bool goDeep) {
+    void siftDown(size_t index) {
         size_t child1 = 2 * index + 1, child2 = 2 * index + 2;
         if (child1 >= unsorted) return;
         size_t maxChild;
@@ -27,8 +27,7 @@ private:
             heap->Set(maxChild, buf);
             newIndex = maxChild;
         }
-        // goDeep - чтобы не тратить время на сравнения, если нужно просеять на 1 ступень (1 этап)
-        if (newIndex != index && goDeep) siftDown(newIndex, goDeep);
+        if (newIndex != index) siftDown(newIndex);
     }
 public:
     BinaryHeap(DynamicArray<T>* array) {
@@ -67,14 +66,14 @@ public:
 
     void pyramidSort() {
         for (int index = unsorted - 1; index >= 0; index--) {
-            siftDown(index, false);
+            siftDown(index);
         }
         T buf = heap->Get(0);
         heap->Set(0, heap->Get(unsorted - 1));
         heap->Set(unsorted - 1, buf);
         unsorted--;
         while (unsorted > 0) {
-            siftDown(0, true);
+            siftDown(0);
             buf = heap->Get(0);
             heap->Set(0, heap->Get(unsorted - 1));
             heap->Set(unsorted - 1, buf);

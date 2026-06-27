@@ -24,7 +24,8 @@ HEADERS += \
     include/serializing.h \
     include/sorting.h \
     tests/testAll.h \
-    tests/testSequence.h
+    tests/testSequence.h \
+    tests/testSort.h
 
 SOURCES += \
     src/Window.cpp \
