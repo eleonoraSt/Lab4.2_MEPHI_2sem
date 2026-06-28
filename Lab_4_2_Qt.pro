@@ -33,4 +33,5 @@ SOURCES += \
     src/serializing.cpp \
     tests/testAll.cpp \
     tests/testSequence.cpp \
-    tests/testSort.cpp
+    tests/testSort.cpp \
+    tests/testStream.cpp

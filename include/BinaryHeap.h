@@ -5,6 +5,8 @@
 
 #include "DynamicArray.h"
 
+#include <iostream>  // для отладки
+
 template <class T> class BinaryHeap {
 private:
     DynamicArray<T>* heap;
@@ -65,6 +67,8 @@ public:
     }
 
     void pyramidSort() {
+        std::cout << "attention freaks, sorting started\n";
+        if (size == 0) return;
         for (int index = unsorted - 1; index >= 0; index--) {
             siftDown(index);
         }

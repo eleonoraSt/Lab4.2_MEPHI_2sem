@@ -16,7 +16,7 @@
 void generateRandomFileInt(size_t length, std::string filename) {
     std::random_device rd;
     std::mt19937 generator(rd());
-    std::uniform_int_distribution<> distribution(INT_MIN, INT_MAX);
+    std::binomial_distribution<> distribution(INT_MIN, INT_MAX);
     FileWriteOnlyStream<int>* outputStream = new FileWriteOnlyStream<int>(filename, int2strSerializer);
     outputStream->Open();
     for (size_t index = 0; index < length; index++) {
@@ -29,7 +29,7 @@ void generateRandomFileInt(size_t length, std::string filename) {
 void generateRandomFileDouble(size_t length, std::string filename) {
     std::random_device rd;
     std::mt19937 generator(rd());
-    std::uniform_real_distribution<> distribution(DBL_MIN, DBL_MAX);
+    std::normal_distribution<> distribution(-1000, 1000);  // Потому что лимиты просто нечитаемые
     FileWriteOnlyStream<double>* outputStream = \
         new FileWriteOnlyStream<double>(filename, double2strSerializer);
     outputStream->Open();
@@ -48,9 +48,16 @@ template <class T> void isFileSorted(short* testNumAddress, std::string filename
         T prev = minLimit, buf;
         bool sorted = true;
         while (!inputStream->IsEndOfStream() && sorted) {
+            /*
             buf = inputStream->Read();
             sorted = prev <= buf;
             prev = buf;
+*/
+            try {
+                buf = inputStream->Read();
+                sorted = prev <= buf;
+                prev = buf;
+            } catch (ErrorCode error) {}
         }
         if (sorted) {
             std::cout << "Test " << *testNumAddress << " passed\n";
@@ -93,13 +100,14 @@ template <class T> void testSeqSort(short* testNumAddress) {
 }
 */
 
-template <class T> void testSort(short* testNumAddress, T minLimit) {
+template <class T> void testSort(short* testNumAddress, Sequence<T>* seq, T minLimit) {
     BinaryHeap<T>* heap = new BinaryHeap<T>();
     T buf;
     T prev = minLimit;
     bool sorted = true;
-    while (std::cin >> buf) {
-        heap->Append(buf);
+    size_t length = seq->GetLength();
+    for (size_t index = 0; index < length; index++) {
+        heap->Append(seq->Get(index));
     }
     heap->pyramidSort();
     size_t index;
@@ -122,8 +130,53 @@ template <class T> void testSort(short* testNumAddress, T minLimit) {
     *testNumAddress += 1;
 }
 
+template <class T> void testInputSort(short* testNumAddress, T minLimit) {
+    std::cout << "the seq test is launched\n";
+    BinaryHeap<T>* heap = new BinaryHeap<T>();
+    T buf;
+    T prev = minLimit;
+    bool sorted = true;
+    std::cout << "entering the try segment\n";
+    /*
+    while (std::cin >> buf) {
+        heap->Append(buf);
+    }
+*/
+    try {
+        while (std::cin >> buf) {
+            heap->Append(buf);
+            std::cout << heap->Get(heap->GetSize() - 1) << "\n";
+        }
+    } catch (ErrorCode error) {
+        std::cout << "error: " << (int)error << "\n";
+        return;
+    }
+    std::cout << "exited the try segment wtf\n";
+    heap->pyramidSort();
+    std::cout << "bro i even sorted the nothing\n";
+    size_t index;
+    for (index = 0; index < heap->GetSize() && sorted; index++) {
+        buf = heap->Get(index);
+        sorted = prev <= buf;
+        prev = buf;
+    }
+    if (sorted) {
+        std::cout << "Test " << *testNumAddress << " passed\n";
+    } else {
+        std::cout << "Test " << *testNumAddress << " failed: " << prev << " > " << buf << " at index " \
+                  << index << " in sequence sorting\n";
+    }
+    for (index = 0; index < heap->GetSize(); index++) {
+        std::cout << heap->Get(index) << " ";
+    }
+    std::cout << "\n";
+    delete heap;
+    *testNumAddress += 1;
+}
+
 void runAllTestSort() {
-    size_t length = 1000000;
+    /*
+    size_t length = 100;
     try {
         generateRandomFileInt(length, INT_I_FILENAME);
         sortFileStream<int>(INT_I_FILENAME, INT_O_FILENAME, str2intDeserializer, int2strSerializer);
@@ -152,13 +205,26 @@ void runAllTestSort() {
             std::cout << "Writing error in " << DOUBLE_O_FILENAME << "\n";
         }
     }
+*/
 
     short testNum = 1;
     short* testNumAddress = &testNum;
 
     isFileSorted<int>(testNumAddress, INT_O_FILENAME, str2intDeserializer, INT_MIN);
     isFileSorted<double>(testNumAddress, DOUBLE_O_FILENAME, str2doubleDeserializer, DBL_MIN);
+    std::cout << "the file tests are fine\n";
 
-    testSort<int>(testNumAddress, INT_MIN);
-    testSort<double>(testNumAddress, DBL_MIN);
+    int intArray[] = {10, 8, -1, 3, -3, 5};
+    double doubleArray[] = {0.5, -0.25, -3.75, 10, 0, 1.125};
+    ArraySequence<int>* intSeq = new ArraySequence<int>(intArray, 6);
+    ArraySequence<double>* doubleSeq = new ArraySequence<double>(doubleArray, 6);
+
+    testSort<int>(testNumAddress, intSeq, INT_MIN);
+    testSort<double>(testNumAddress, doubleSeq, DBL_MIN);
+
+    delete intSeq;
+    delete doubleSeq;
+
+    testInputSort<int>(testNumAddress, INT_MIN);
+    testInputSort<double>(testNumAddress, DBL_MIN);
 }

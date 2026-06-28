@@ -1,5 +1,7 @@
 todo
 /build/
 /.qtcreator/
-testInput.txt
-testOutput.txt
+testIntInput.txt
+testIntOutput.txt
+testDoubleInput.txt
+testDoubleOutput.txt
