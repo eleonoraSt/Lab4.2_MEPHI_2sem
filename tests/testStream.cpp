@@ -5,6 +5,7 @@
 #include "..\include\SequenceReadOnlyStream.h"
 #include "..\include\SequenceWriteOnlyStream.h"
 #include "..\include\serializing.h"
+#include "testStream.h"
 
 template <class T> void testRead(short* testNumAddress, ReadOnlyStream<T>* stream, T expected) {
     try {
@@ -108,7 +109,7 @@ template <class T> void testGetPosWriting(short* testNumAddress, WriteOnlyStream
         std::cout << "Test " << *testNumAddress << " passed\n";
     } else {
         std::cout << "Test " << *testNumAddress << " failed: expected " << expected << ", got " << pos \
-                  << "in GetPosition in WriteOnlyStream\n";
+                  << " in GetPosition in WriteOnlyStream\n";
     }
     *testNumAddress += 1;
 }
@@ -121,12 +122,12 @@ void runAllTestStream() {
     FileWriteOnlyStream<double>* doubleOutput = new FileWriteOnlyStream<double>("testDouble.txt", \
                                                                               double2strSerializer);
     intOutput->Open();
-    doubleOutput->Close();
+    doubleOutput->Open();
     intOutput->Write(1);
     doubleOutput->Write(0.5);
 
     testGetPosWriting(testNumAddress, intOutput, 1);
-    testGetPosWriting(testNumAddress, doubleOutput, 1);
+    testGetPosWriting(testNumAddress, doubleOutput, 1);  //2
 
     intOutput->Close();
     doubleOutput->Close();
@@ -137,6 +138,11 @@ void runAllTestStream() {
     FileReadOnlyStream<double>* doubleInput = new FileReadOnlyStream<double>("testDouble.txt", \
                                                                           str2doubleDeserializer);
 
+    testReadError(testNumAddress, intInput);
+    testReadError(testNumAddress, doubleInput);  //4
+    intInput->Open();
+    doubleInput->Open();
+
     testEOF(testNumAddress, intInput, false);
     testEOF(testNumAddress, doubleInput, false);
     testRead(testNumAddress, intInput, 1);
@@ -146,17 +152,59 @@ void runAllTestStream() {
     testReadError(testNumAddress, intInput);
     testReadError(testNumAddress, doubleInput);
     testEOF(testNumAddress, intInput, true);
-    testEOF(testNumAddress, doubleInput, true);
+    testEOF(testNumAddress, doubleInput, true);  //14
 
     testCanSeek(testNumAddress, intInput, false);
     testCanSeek(testNumAddress, doubleInput, false);
     testSeekError(testNumAddress, intInput, 0);
     testSeekError(testNumAddress, doubleInput, 0);
     testCanGoBack(testNumAddress, intInput, false);
-    testCanGoBack(testNumAddress, doubleInput, false);
+    testCanGoBack(testNumAddress, doubleInput, false);  //20
 
     intInput->Close();
     doubleInput->Close();
     delete intInput;
     delete doubleInput;
+
+    ListSequence<int>* intSeq = new ListSequence<int>();
+    ListSequence<double>* doubleSeq = new ListSequence<double>();
+    SequenceWriteOnlyStream<int>* intOutSeq = new SequenceWriteOnlyStream<int>(intSeq);
+    SequenceWriteOnlyStream<double>* doubleOutSeq = new SequenceWriteOnlyStream<double>(doubleSeq);
+    intOutSeq->Write(2);
+    doubleOutSeq->Write(-0.5);
+
+    testGetPosWriting(testNumAddress, intOutSeq, 1);
+    testGetPosWriting(testNumAddress, doubleOutSeq, 1);  //22
+    intOutSeq->Close();
+    doubleOutSeq->Close();
+    delete intOutSeq;
+    delete doubleOutSeq;
+
+    SequenceReadOnlyStream<int>* intInSeq = new SequenceReadOnlyStream<int>(intSeq);
+    SequenceReadOnlyStream<double>* doubleInSeq = new SequenceReadOnlyStream<double>(doubleSeq);
+
+    testEOF(testNumAddress, intInSeq, false);
+    testEOF(testNumAddress, doubleInSeq, false);
+    testRead(testNumAddress, intInSeq, 2);
+    testRead(testNumAddress, doubleInSeq, -0.5);
+    testGetPosReading(testNumAddress, intInSeq, 1);
+    testGetPosReading(testNumAddress, doubleInSeq, 1);
+    testReadError(testNumAddress, intInSeq);
+    testReadError(testNumAddress, doubleInSeq);
+    testEOF(testNumAddress, intInSeq, true);
+    testEOF(testNumAddress, doubleInSeq, true);  //32
+
+    testCanSeek(testNumAddress, intInSeq, true);
+    testCanSeek(testNumAddress, doubleInSeq, true);
+    testSeek(testNumAddress, intInSeq, 0);
+    testSeek(testNumAddress, doubleInSeq, 0);
+    testCanGoBack(testNumAddress, intInSeq, true);
+    testCanGoBack(testNumAddress, doubleInSeq, true);  //38
+
+    intInSeq->Close();
+    doubleInSeq->Close();
+    delete intInSeq;
+    delete doubleInSeq;
+    delete intSeq;
+    delete doubleSeq;
 }

@@ -48,11 +48,6 @@ template <class T> void isFileSorted(short* testNumAddress, std::string filename
         T prev = minLimit, buf;
         bool sorted = true;
         while (!inputStream->IsEndOfStream() && sorted) {
-            /*
-            buf = inputStream->Read();
-            sorted = prev <= buf;
-            prev = buf;
-*/
             try {
                 buf = inputStream->Read();
                 sorted = prev <= buf;
@@ -79,30 +74,9 @@ template <class T> void isFileSorted(short* testNumAddress, std::string filename
     *testNumAddress += 1;
 }
 
-/*
-template <class T> void testSeqSort(short* testNumAddress) {
-    Sequence<T>* seq = new ListSequence<T>();
-    T buf;
-    size_t length = 0;
-    while (std::cin >> buf) {
-        seq->Append(buf);
-        length++;
-    }
-    SequenceReadOnlyStream<T>* inputStream = new SequenceReadOnlyStream<T>(seq);
-    BinaryHeap<T>* heap = new BinaryHeap<T>();
-    for (size_t index = 0; index < length; index++) {
-        heap->Append(seq->Get(index));
-    }
-    heap->pyramidSort();
-    for (size_t index = 0; index < length; index++) {
-
-    }
-}
-*/
-
 template <class T> void testSort(short* testNumAddress, Sequence<T>* seq, T minLimit) {
     BinaryHeap<T>* heap = new BinaryHeap<T>();
-    T buf;
+    T buf = minLimit;
     T prev = minLimit;
     bool sorted = true;
     size_t length = seq->GetLength();
@@ -112,9 +86,9 @@ template <class T> void testSort(short* testNumAddress, Sequence<T>* seq, T minL
     heap->pyramidSort();
     size_t index;
     for (index = 0; index < heap->GetSize() && sorted; index++) {
+        prev = buf;
         buf = heap->Get(index);
         sorted = prev <= buf;
-        prev = buf;
     }
     if (sorted) {
         std::cout << "Test " << *testNumAddress << " passed\n";
@@ -137,11 +111,6 @@ template <class T> void testInputSort(short* testNumAddress, T minLimit) {
     T prev = minLimit;
     bool sorted = true;
     std::cout << "entering the try segment\n";
-    /*
-    while (std::cin >> buf) {
-        heap->Append(buf);
-    }
-*/
     try {
         while (std::cin >> buf) {
             heap->Append(buf);
@@ -212,7 +181,6 @@ void runAllTestSort() {
 
     isFileSorted<int>(testNumAddress, INT_O_FILENAME, str2intDeserializer, INT_MIN);
     isFileSorted<double>(testNumAddress, DOUBLE_O_FILENAME, str2doubleDeserializer, DBL_MIN);
-    std::cout << "the file tests are fine\n";
 
     int intArray[] = {10, 8, -1, 3, -3, 5};
     double doubleArray[] = {0.5, -0.25, -3.75, 10, 0, 1.125};
@@ -220,11 +188,11 @@ void runAllTestSort() {
     ArraySequence<double>* doubleSeq = new ArraySequence<double>(doubleArray, 6);
 
     testSort<int>(testNumAddress, intSeq, INT_MIN);
-    testSort<double>(testNumAddress, doubleSeq, DBL_MIN);
+    testSort<double>(testNumAddress, doubleSeq, -DBL_MAX);
 
     delete intSeq;
     delete doubleSeq;
 
     testInputSort<int>(testNumAddress, INT_MIN);
-    testInputSort<double>(testNumAddress, DBL_MIN);
+    testInputSort<double>(testNumAddress, -DBL_MAX);
 }

@@ -25,7 +25,8 @@ HEADERS += \
     include/sorting.h \
     tests/testAll.h \
     tests/testSequence.h \
-    tests/testSort.h
+    tests/testSort.h \
+    tests/testStream.h
 
 SOURCES += \
     src/Window.cpp \

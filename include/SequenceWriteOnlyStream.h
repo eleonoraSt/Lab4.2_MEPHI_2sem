@@ -12,7 +12,7 @@ private:
     size_t pos;
     bool opened;
 public:
-    SequenceWriteOnlyStream(const Sequence<T>* sequence) {
+    SequenceWriteOnlyStream(Sequence<T>* sequence) {
         seq = sequence;
         pos = 0;
         opened = true;
@@ -53,7 +53,6 @@ public:
     }
 
     void Close() override {
-        delete seq;
         opened = false;
     }
 };
