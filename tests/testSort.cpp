@@ -16,7 +16,7 @@
 void generateRandomFileInt(size_t length, std::string filename) {
     std::random_device rd;
     std::mt19937 generator(rd());
-    std::binomial_distribution<> distribution(INT_MIN, INT_MAX);
+    std::uniform_int_distribution<> distribution(-1000, 1000);
     FileWriteOnlyStream<int>* outputStream = new FileWriteOnlyStream<int>(filename, int2strSerializer);
     outputStream->Open();
     for (size_t index = 0; index < length; index++) {
@@ -29,7 +29,7 @@ void generateRandomFileInt(size_t length, std::string filename) {
 void generateRandomFileDouble(size_t length, std::string filename) {
     std::random_device rd;
     std::mt19937 generator(rd());
-    std::normal_distribution<> distribution(-1000, 1000);  // Потому что лимиты просто нечитаемые
+    std::uniform_real_distribution<> distribution(-1000, 1000);
     FileWriteOnlyStream<double>* outputStream = \
         new FileWriteOnlyStream<double>(filename, double2strSerializer);
     outputStream->Open();
@@ -144,7 +144,6 @@ template <class T> void testInputSort(short* testNumAddress, T minLimit) {
 }
 
 void runAllTestSort() {
-    /*
     size_t length = 100;
     try {
         generateRandomFileInt(length, INT_I_FILENAME);
@@ -174,7 +173,6 @@ void runAllTestSort() {
             std::cout << "Writing error in " << DOUBLE_O_FILENAME << "\n";
         }
     }
-*/
 
     short testNum = 1;
     short* testNumAddress = &testNum;
