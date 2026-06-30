@@ -3,9 +3,7 @@
 
 #include <cstdlib>  // size_t
 
-#include "DynamicArray.h"
-
-#include <iostream>  // для отладки
+#include "DynamicArray.h"\
 
 template <class T> class BinaryHeap {
 private:
@@ -67,7 +65,6 @@ public:
     }
 
     void pyramidSort() {
-        std::cout << "attention freaks, sorting started\n";
         if (size == 0) return;
         for (int index = unsorted - 1; index >= 0; index--) {
             siftDown(index);

@@ -5,19 +5,17 @@
 #include "..\include\serializing.h"
 #include "..\include\sorting.h"
 
-#include <iostream>  // для отладки
-
 Window::Window(QWidget *parent) {
     setFixedSize(650, 650);
 
     allowDoubles = new QCheckBox("Разрешить действительные числа", this);
     allowDoubles->setGeometry(10, 10, 500, 30);
 
-    inputFilenameHint = new QLabel("Введите адрес файла ввода:", this);
+    inputFilenameHint = new QLabel("Введите имя файла ввода:", this);
     inputFilenameHint->setGeometry(10, 50, 500, 30);
     inputFilenameField = new QTextEdit(this);
     inputFilenameField->setGeometry(10, 90, 500, 30);
-    outputFilenameHint = new QLabel("Введите адрес файла вывода:", this);
+    outputFilenameHint = new QLabel("Введите имя файла вывода:", this);
     outputFilenameHint->setGeometry(10, 130, 500, 30);
     outputFilenameField = new QTextEdit(this);
     outputFilenameField->setGeometry(10, 170, 500, 30);
@@ -50,7 +48,6 @@ void Window::fileButtonClicked() {
     std::string outputFilename = outputFilenameField->toPlainText().toStdString();
     try {
         if (allowDoubles->isChecked()) {
-            std::cout << "about to call the func\n";
             sortFileStream<double>(inputFilename, outputFilename, str2doubleDeserializer, \
                                    double2strSerializer);
         } else {
@@ -66,7 +63,6 @@ void Window::fileButtonClicked() {
             resultMessage->setText("Ошибка записи в файл");
         } else {
             resultMessage->setText("Ошибка");
-            std::cout << "error: " << (int)error << "\n";
         }
     }
 }

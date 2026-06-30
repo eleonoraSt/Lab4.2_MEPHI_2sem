@@ -118,7 +118,8 @@ void runAllTestStream() {
     short testNum = 1;
     short* testNumAddress = &testNum;
 
-    FileWriteOnlyStream<int>* intOutput = new FileWriteOnlyStream<int>("testInt.txt", int2strSerializer);
+    FileWriteOnlyStream<int>* intOutput = new FileWriteOnlyStream<int>("testInt.txt", \
+                                                                       int2strSerializer);
     FileWriteOnlyStream<double>* doubleOutput = new FileWriteOnlyStream<double>("testDouble.txt", \
                                                                               double2strSerializer);
     intOutput->Open();
@@ -134,7 +135,8 @@ void runAllTestStream() {
     delete intOutput;
     delete doubleOutput;
 
-    FileReadOnlyStream<int>* intInput = new FileReadOnlyStream<int>("testInt.txt", str2intDeserializer);
+    FileReadOnlyStream<int>* intInput = new FileReadOnlyStream<int>("testInt.txt", \
+                                                                    str2intDeserializer);
     FileReadOnlyStream<double>* doubleInput = new FileReadOnlyStream<double>("testDouble.txt", \
                                                                           str2doubleDeserializer);
 
