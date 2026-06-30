@@ -1,6 +1,8 @@
 #ifndef LINKED_LIST_H
 #define LINKED_LIST_H
 
+#include <cstdlib>  // size_t
+
 #include "errors.h"
 #include "Node.h"
 
@@ -9,11 +11,10 @@ private:
     Node<T>* head;
     Node<T>* tail;
 public:
-    LinkedList(const T* items, int count) {
-        if (count < 0) throw NEGATIVE_SIZE;
+    LinkedList(const T* items, size_t count) {
         head = nullptr;
         tail = nullptr;
-        for (int index = 0; index < count; index++) {
+        for (size_t index = 0; index < count; index++) {
             this->Append(items[index]);
         }
     }
@@ -52,22 +53,21 @@ public:
         return tail->GetData();
     }
 
-    T Get(int index) const {
-        if (index < 0) throw INDEX_ERROR;
+    T Get(size_t index) const {
         if (head == nullptr) throw INDEX_ERROR;  // Пустой список
         Node<T>* item = head;
-        for (int current = 0; current < index; current++) {
+        for (size_t current = 0; current < index; current++) {
             item = item->GetNext();
             if (item == nullptr) throw INDEX_ERROR;  // Индекс больше размера массива
         }
         return item->GetData();
     }
 
-    LinkedList<T>* GetSubList(int startIndex, int endIndex) const {
-        if (startIndex < 0 || endIndex < 0 || startIndex > endIndex) throw INDEX_ERROR;
+    LinkedList<T>* GetSubList(size_t startIndex, size_t endIndex) const {
+        if (startIndex > endIndex) throw INDEX_ERROR;
         LinkedList<T>* sublist = new LinkedList<T>();
         Node<T>* item = head;
-        int index;
+        size_t index;
         for (index = 0; index < startIndex; index++) {
             if (item == nullptr) {  // Начальный индекс больше размера массива
                 delete sublist;
@@ -86,9 +86,9 @@ public:
         return sublist;
     }
 
-    int GetLength() const {
+    size_t GetLength() const {
         Node<T>* item = head;
-        int count = 0;
+        size_t count = 0;
         while (item != nullptr) {
             count++;
             item = item->GetNext();
@@ -118,15 +118,14 @@ public:
         head = node;
     }
 
-    void InsertAt(T item, int index) {
-        if (index < 0) throw INDEX_ERROR;
+    void InsertAt(T item, size_t index) {
         if (index == 0) {
             this->Prepend(item);
             return;
         }
         Node<T>* prev = head;
         if (prev == nullptr) throw INDEX_ERROR;
-        for (int current = 0; current < index - 1; current++) {
+        for (size_t current = 0; current < index - 1; current++) {
             if (prev == nullptr) throw INDEX_ERROR;  // передан индекс больше размера списка
             prev = prev->GetNext();
         }

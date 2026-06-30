@@ -1,28 +1,28 @@
 #ifndef DYNAMIC_ARRAY_H
 #define DYNAMIC_ARRAY_H
 
+#include <cstdlib>  // size_t
+
 #include "errors.h"
 
 template <class T> class DynamicArray {
 private:
     T* data;
-    int size;
+    size_t size;
 public:
-    DynamicArray(const T* items, int count) {
-        if (count < 0) throw NEGATIVE_SIZE;
+    DynamicArray(const T* items, size_t count) {
         size = count;
         if (count == 0) {
             data = nullptr;
             return;
         }
         data = new T[count];
-        for (int index = 0; index < count; index++) {
+        for (size_t index = 0; index < count; index++) {
             data[index] = items[index];
         }
     }
 
-    DynamicArray(int count) {
-        if (count < 0) throw NEGATIVE_SIZE;
+    DynamicArray(size_t count) {
         size = count;
         if (count == 0) {
             data = nullptr;
@@ -34,7 +34,7 @@ public:
     DynamicArray(const DynamicArray<T> &dynamicArray) {
         size = dynamicArray.GetSize();
         data = new T[size];
-        for (int index = 0; index < size; index++) {
+        for (size_t index = 0; index < size; index++) {
             data[index] = dynamicArray.Get(index);
         }
     }
@@ -43,25 +43,24 @@ public:
         if (data) delete[] data;
     }
 
-    T Get(int index) const {
-        if (index < 0 || index >= size) throw INDEX_ERROR;
+    T Get(size_t index) const {
+        if (index >= size) throw INDEX_ERROR;
         return data[index];
     }
 
-    int GetSize() const {
+    size_t GetSize() const {
         return size;
     }
 
-    void Set(int index, T value) {
-        if (index < 0 || index >= size) throw INDEX_ERROR;
+    void Set(size_t index, T value) {
+        if (index >= size) throw INDEX_ERROR;
         data[index] = value;
     }
 
-    void Resize(int newSize) {
-        if (newSize < 0) throw NEGATIVE_SIZE;
+    void Resize(size_t newSize) {
         T* newData = newSize == 0 ? nullptr : new T[newSize];
-        int copyNum = size <= newSize ? size : newSize;
-        for (int index = 0; index < copyNum; index++) {
+        size_t copyNum = size <= newSize ? size : newSize;
+        for (size_t index = 0; index < copyNum; index++) {
             newData[index] = data[index];
         }
         delete[] data;
@@ -72,7 +71,7 @@ public:
     DynamicArray<T> operator=(const DynamicArray<T> &other) {
         if (data && this != &other) delete []data;
         Resize(other.size);
-        for (int index = 0; index < size; index++) {
+        for (size_t index = 0; index < size; index++) {
             data[size] = other.data[size];
         }
         return *this;
