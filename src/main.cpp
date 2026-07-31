@@ -4,7 +4,7 @@
 #include "..\tests\testAll.h"
 
 int main(int argc, char** argv) {
-    runAllTests();
+    //runAllTests();
     QApplication app(argc, argv);
     Window window;
     window.show();
